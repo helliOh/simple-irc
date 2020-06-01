@@ -3,10 +3,10 @@ cli=next.js, server=express (es6 with babel)
 
 TODO
 ---
-[x] Next.js client
-[x] Express with babel server
-[x] Express with socket io
-[x] Model design
+[v] Next.js client
+[v] Express with babel server
+[v] Express with socket io
+[v] Model design
 [ ] Login and session
 [ ] Socket Comm. with DB
 [ ] Styling - kakao style with material-ui
