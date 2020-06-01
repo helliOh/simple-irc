@@ -1,11 +1,11 @@
-import FooApi from './api/foo';
-import ChatApi from './api/chat';
+import { UserApi, RoomApi, ChatApi } from './api';
 import FooClient from './client/foo.js';
 
 export default function App(app){
   //API routes
-  app.use('/api/foo', FooApi);
-  app.use('/api/chat', ChatApi);
+  app.use('/api/users', UserApi);
+  app.use('/api/rooms', RoomApi);
+  app.use('/api/chats', ChatApi);
 
   //Client routes
   app.use('/', FooClient);

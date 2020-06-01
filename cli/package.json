@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "latest",
+    "axios": "^0.19.2",
     "clsx": "latest",
     "next": "latest",
     "package.json": "^2.0.1",

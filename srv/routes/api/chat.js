@@ -1,11 +1,49 @@
 import express from 'express';
+import sequelize from 'sequelize';
+import models from '../../models';
+
+const { Chat, ChatAlarm, User, Room } = models;
+
 var router = express.Router();
 
-router.get('/send', async (req, res, next) => {
+const validate = {
+  ListChat(req, res, next){
+      console.log('Validation(ListChat)\tisLogined?hasAuth?');
+      next(); 
+    },
+  ListRoomChat(req, res, next){
+      console.log('Validation(ListRoomChat)\tisLogined?\troomExists?\tisJoined?');
+      next(); 
+  },
+  CreateChat(req, res, next){
+      console.log('Validation(CreateChat)\tisLogined?\troomExists?\tisJoined?');
+      next();
+  }
+};
+
+router.get('/', validate.ListChat, async (req, res, next) => {
   try {
     const { io } = req.app;
 
-    io.emit('chat', {'name' : 'darkman'})
+    const chats = await Chat.findAll({
+      include : { all : true }
+    });
+
+    res.json({chats : chats});
+  } catch(e) {
+    console.log(e);
+    res.status(300).send({success:false, message:"failed"});
+  }
+});
+
+router.get('/:roomId', validate.ListRoomChat, async (req, res, next) => {
+  try {
+    const chats = await Chat.findAll({
+      include : { all : true },
+      where : {
+        roomId : req.params.roomId
+      }
+    })
 
     res.send({
       whatever : 'you want to return'
@@ -16,35 +54,21 @@ router.get('/send', async (req, res, next) => {
   }
 });
 
-// router.get('/:id', async (req, res, next) => {
-  
-//   try {
+router.post('/', validate.CreateChat, async (req, res, next) => {
+  try {
+    const chat = await Chat.create(req.body);
+    const { io } = req.app;
 
-//     res.send("bar");
-//   } catch(e) {
-//     console.log(e);
-//     res.status(300).send({success:false, message:"failed"});
-//   }
-// });
+    io.emit('chat', chat);
 
-// router.put('/:id', async function(req, res, next) {
-//   try {
-
-//     res.send("bar");
-//   } catch(e) {
-//     console.log(e);
-//     res.status(300).send({message:"failed"});
-//   }
-// });
-
-// router.delete('/', async function(req, res, next) {
-//   try {
-//     res.send({success:true});
-//   } catch(e) {
-//     console.log(e);
-//     res.status(300).send({message:"failed"});
-//   }
-// });
+    res.send({
+      whatever : 'you want to return'
+    });
+  } catch(e) {
+    console.log(e);
+    res.status(300).send({success:false, message:"failed"});
+  }
+});
 
 
 module.exports = router;

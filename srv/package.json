@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "set PORT=4000 && nodemon --exec babel-node ./bin/www"
+    "start": "set PORT=4000 && nodemon --exec babel-node ./bin/www",
+    "forceStart": "set FORCE=true && set PORT=4000 && nodemon --exec babel-node ./bin/www",
+    "seed": "sequelize db:seed --seed User Room"
   },
   "dependencies": {
     "babel-cli": "^6.26.0",
