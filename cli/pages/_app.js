@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
+
 import Head from 'next/head';
+
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import theme from '../src/theme';
-import NavBar from '../src/NavBar';
+import { NavBar } from '../src/components';
+import { wrapper } from '../src/stores';
 
-export default function MyApp(props) {
-  const { Component, pageProps } = props;
-
+function MyApp({ Component, pageProps }) {
   useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side');
@@ -28,13 +28,10 @@ export default function MyApp(props) {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <NavBar />
-        <Component {...pageProps} />
+        <Component {...pageProps}/>
       </ThemeProvider>
     </React.Fragment>
   );
 }
 
-MyApp.propTypes = {
-  Component: PropTypes.elementType.isRequired,
-  pageProps: PropTypes.object.isRequired,
-};
+export default wrapper.withRedux(MyApp);

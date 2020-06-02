@@ -1,24 +1,27 @@
-import React from 'react';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import ProTip from '../src/ProTip';
-import Link from '../src/Link';
-import Copyright from '../src/Copyright';
+import React, {useEffect} from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-export default function Index() {
-  return (
-    <Container maxWidth="sm">
-      <Box my={4}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Next.js example
-        </Typography>
-        <Link href="/about" color="secondary">
-          Go to the about page
-        </Link>
-        <ProTip />
-        <Copyright />
-      </Box>
-    </Container>
-  );
+import { HomePage } from '../src/pages';
+import { wrapper } from '../src/stores';
+
+import { addCount } from '../src/stores/count/action';
+import { serverRenderClock, startClock } from '../src/stores/tick/action'
+
+function Index(props) {
+  return (<HomePage {...props}/>);
 }
+
+export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
+  store.dispatch(serverRenderClock(true))
+  store.dispatch(addCount())
+})
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addCount: bindActionCreators(addCount, dispatch),
+    startClock: bindActionCreators(startClock, dispatch),
+  }
+}
+
+export default connect(null, mapDispatchToProps)(Index);

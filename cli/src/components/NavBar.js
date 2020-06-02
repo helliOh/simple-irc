@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
 
+import Link from 'next/link';
+
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -25,17 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
 const NavBar = () => {
     const classes = useStyles();
-    const [User, setUser] = useState();
-
-    useEffect(() =>{
-        const cookies = document.cookie.split(';');
-
-        for(const cookie of cookies){
-            const [key, val] = cookie.replace(/ /gi, '').split('=');
-
-            if(key == 'user') setUser(JSON.stringify(val));
-        }
-    })
+    const [User, setUser] = useState(false);
 
     return (
         <Paper className={classes.root}>
@@ -45,7 +37,7 @@ const NavBar = () => {
                 <MenuIcon />
                 </IconButton>
                 <Typography variant="h6" className={classes.title}>
-                News
+                <Link href="/"><a>News</a></Link>
                 </Typography>
                 { User ? <Button color="inherit">Logout</Button> : <Button color="inherit">Login</Button>}
             </Toolbar>
