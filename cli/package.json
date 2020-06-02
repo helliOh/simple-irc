@@ -8,6 +8,7 @@
     "axios": "^0.19.2",
     "clsx": "latest",
     "next": "latest",
+    "next-redux-wrapper": "^6.0.1",
     "package.json": "^2.0.1",
     "prop-types": "latest",
     "react": "latest",
