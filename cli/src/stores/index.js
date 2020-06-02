@@ -1,9 +1,11 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux'
-import { HYDRATE, createWrapper } from 'next-redux-wrapper'
-import thunkMiddleware from 'redux-thunk'
+import createSagaMiddleware from 'redux-saga'
 
-import count from './count/reducer'
-import tick from './tick/reducer'
+import { HYDRATE, createWrapper } from 'next-redux-wrapper'
+
+import rootSaga from './saga'
+import { reducer as counterReducer } from './counter';
+import { reducer as tickReducer } from './tick';
 
 const bindMiddleware = (middleware) => {
   if (process.env.NODE_ENV !== 'production') {
@@ -13,9 +15,9 @@ const bindMiddleware = (middleware) => {
   return applyMiddleware(...middleware)
 }
 
-const combinedReducer = combineReducers({
-  count,
-  tick,
+const combinedReducer = (state, action) => combineReducers({
+  counterReducer,
+  tickReducer,
 })
 
 const reducer = (state, action) => {
@@ -24,15 +26,23 @@ const reducer = (state, action) => {
       ...state, // use previous state
       ...action.payload, // apply delta from hydration
     }
+
     if (state.count) nextState.count = state.count // preserve count value on client side navigation
+    if (state.tick) nextState.tick = state.tick
+
     return nextState
-  } else {
-    return combinedReducer(state, action)
-  }
+  } 
+
+  return combinedReducer(state, action)
 }
 
-const makeStore = () => {
-  return createStore(reducer, bindMiddleware([thunkMiddleware]))
+const makeStore = () =>{
+  const sagaMiddleware = createSagaMiddleware();
+  const instance = createStore(counterReducer, bindMiddleware([sagaMiddleware]));
+  
+  sagaMiddleware.run(rootSaga);
+
+  return instance
 }
 
-export const wrapper = createWrapper(makeStore);
+export const wrapper = createWrapper(makeStore, {debug : true});

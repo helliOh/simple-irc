@@ -1,9 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { addCount } from '../stores/count/action'
+import { actions } from '../stores/counter'
 
-const AddCount = ({ count, addCount }) => {
+const { addAsync } = actions;
+
+const AddCount = ({ count, addAsync }) => {
   return (
     <div>
       <style jsx>{`
@@ -14,18 +16,19 @@ const AddCount = ({ count, addCount }) => {
       <h1>
         AddCount: <span>{count}</span>
       </h1>
-      <button onClick={addCount}>Add To Count</button>
+      <button onClick={addAsync}>Add To Count</button>
     </div>
   )
 }
 
 const mapStateToProps = (state) => ({
-  count: state.count.count,
+  count: state.count,
+  tick: state.tick
 })
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addCount: bindActionCreators(addCount, dispatch),
+    addAsync: bindActionCreators(addAsync, dispatch),
   }
 }
 

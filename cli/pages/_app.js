@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 
+import withReduxSaga from 'next-redux-saga';
 import Head from 'next/head';
 
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -34,4 +35,18 @@ function MyApp({ Component, pageProps }) {
   );
 }
 
-export default wrapper.withRedux(MyApp);
+const configureStore = (initialState, options) => {
+  const sagaMiddleware = createSagaMiddleware(); // 리덕스 사가 생성
+  const middlewares = [sagaMiddleware]; // 미들웨어 연결
+  const enhancer = process.env.NODE_ENV === 'production' ? 
+    compose(applyMiddleware(...middlewares)) : 
+        composeWithDevTools(
+          applyMiddleware(...middlewares)
+        );
+  const store = createStore(reducer, initialState, enhancer); // enhancer에 넣어서 saga가 적용된 store 생성
+  store.sagaTask = sagaMiddleware.run(rootSaga); // store에 rootSaga를 넣은 sagaMiddleware를 실행시켜준다.
+  return store;
+
+}
+
+export default wrapper.withRedux(withReduxSaga(MyApp));

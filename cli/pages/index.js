@@ -5,22 +5,25 @@ import { connect } from 'react-redux';
 import { HomePage } from '../src/pages';
 import { wrapper } from '../src/stores';
 
-import { addCount } from '../src/stores/count/action';
-import { serverRenderClock, startClock } from '../src/stores/tick/action'
+import { actions as counterAction } from '../src/stores/counter'
+import { actions as tickAction } from '../src/stores/tick'
+
+const { addAsync } = counterAction;
+const { tick } = tickAction;
 
 function Index(props) {
   return (<HomePage {...props}/>);
 }
 
 export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
-  store.dispatch(serverRenderClock(true))
-  store.dispatch(addCount())
+  store.dispatch(tick())
+  store.dispatch(addAsync())
 })
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addCount: bindActionCreators(addCount, dispatch),
-    startClock: bindActionCreators(startClock, dispatch),
+    tick: bindActionCreators(tick, dispatch),
+    addAsync: bindActionCreators(addAsync, dispatch),
   }
 }
 
