@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import { HomePage } from '../src/pages';
 import { wrapper } from '../src/stores';
 
-import { actions as counterAction } from '../src/stores/counter'
-import { actions as tickAction } from '../src/stores/tick'
+import { actions as counterAction } from '../src/reducers/counter'
+import { actions as tickAction } from '../src/reducers/tick'
 
 const { addAsync } = counterAction;
 const { tick } = tickAction;
@@ -15,9 +15,15 @@ function Index(props) {
   return (<HomePage {...props}/>);
 }
 
-export const getStaticProps = wrapper.getStaticProps(async ({ store }) => {
-  store.dispatch(tick())
+export const getStaticProps = wrapper.getStaticProps(({store, preview}) => {
+  console.log('2. Page.getStaticProps uses the store to dispatch things');
+  store.dispatch(tick()),
   store.dispatch(addAsync())
+});
+
+const mapStateToProps = (state) => ({
+  counter: state.counter,
+  ticks : state.tick
 })
 
 const mapDispatchToProps = (dispatch) => {
@@ -27,4 +33,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(Index);
+export default connect(mapStateToProps, mapDispatchToProps)(Index);

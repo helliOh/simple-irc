@@ -21,11 +21,13 @@ export const actions = {
 }
 
 export const reducer = handleActions({
-    [TICK]: (state, action) => ({
-        tick : state.tick + 1
-    }),
+    [TICK]: (state, action) => {
+        console.log('TICK REDUCER');
+        console.log(state, action);
+        return state + 1
+    }
     
-}, {tick : 0});
+}, 0);
 
 //saga
 function* tickAsyncSaga() {

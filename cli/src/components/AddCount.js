@@ -1,11 +1,30 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { actions } from '../stores/counter'
 
-const { addAsync } = actions;
+const AddCount = (props) => {
+  const { counter, addAsync } = props;
+  
+  /*
+    Solution 1. react event-pooling :: persist()
+    
+    Synthetic event pool
 
-const AddCount = ({ count, addAsync }) => {
+  function clickHandler(e){
+    e.persist()
+    addAsync();
+  }  
+  */
+
+  /* Solution 2. My solution */
+
+  function* addGenerator(){ yield addAsync(); }
+
+  function clickHandler(){
+    const generator = addGenerator();
+    generator.next();
+  }  
+
   return (
     <div>
       <style jsx>{`
@@ -14,22 +33,11 @@ const AddCount = ({ count, addAsync }) => {
         }
       `}</style>
       <h1>
-        AddCount: <span>{count}</span>
+        AddCount: <span>{counter}</span>
       </h1>
-      <button onClick={addAsync}>Add To Count</button>
+      <button onClick={clickHandler}>Add To Count</button>
     </div>
   )
 }
 
-const mapStateToProps = (state) => ({
-  count: state.count,
-  tick: state.tick
-})
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    addAsync: bindActionCreators(addAsync, dispatch),
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(AddCount)
+export default connect((state) => state)(AddCount)

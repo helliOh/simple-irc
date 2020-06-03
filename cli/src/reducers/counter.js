@@ -23,10 +23,9 @@ export const actions = {
 
 //reducer
 export const reducer = handleActions({
-    [ADD]: (state, action) => ({
-        count : state.count + 1
-    }),
-}, {count : 0});
+    [ADD]: (state, action) => state + 1
+
+}, 0);
 
 //saga
 function* addAsyncSaga() {

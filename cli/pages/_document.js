@@ -2,7 +2,7 @@ import React from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheet } from 'styled-components'
 import { ServerStyleSheets } from '@material-ui/styles';
-import theme from '../src/theme';
+import theme from '../src/utils/theme';
 
 export default class MyDocument extends Document {
   // Resolution order
@@ -36,7 +36,7 @@ export default class MyDocument extends Document {
         ctx.renderPage = () => originalRenderPage({
             enhanceApp: App => props => styledComponentsSheet.collectStyles(materialSheets.collect(<App {...props} />))
           })
-          
+
         const initialProps = await Document.getInitialProps(ctx);
 
         return {
